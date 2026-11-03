@@ -1,9 +1,16 @@
 # TuWoW RareScan v2.0 (Edición "Rare Explorer")
 
+[![Descargar Addon](https://img.shields.io/badge/DESCARGA%20DIRECTA%20ZIP-v2.0.0%20(23.5%20MB)-success?style=for-the-badge&logo=github)](https://github.com/zequielbogado-alt/TuWoW_RareScan/releases/download/v2.0.0/TuWoW_RareScan-v2.0.0.zip)
+
 [![WoW Version](https://img.shields.io/badge/WoW-3.3.5a%20(Build%2012340)-blue.svg)](https://github.com/zequielbogado-alt/TuWoW_RareScan)
 [![Interface](https://img.shields.io/badge/Interface-30300-orange.svg)](https://github.com/zequielbogado-alt/TuWoW_RareScan)
 [![UI Theme](https://img.shields.io/badge/Theme-ForeverUI%20Dark%20%26%20Gold-gold.svg)](https://github.com/zequielbogado-alt/TuWoW_RareScan)
 [![Status](https://img.shields.io/badge/Status-Stable%20v2.0-brightgreen.svg)](https://github.com/zequielbogado-alt/TuWoW_RareScan)
+
+> 🚀 **[HACÉ CLIC ACÁ PARA DESCARGAR LA ÚLTIMA VERSIÓN (TuWoW_RareScan-v2.0.0.zip)](https://github.com/zequielbogado-alt/TuWoW_RareScan/releases/download/v2.0.0/TuWoW_RareScan-v2.0.0.zip)**  
+> *Comprimido listo para extraer en tu carpeta `Interface/AddOns/` y empezar a jugar inmediatamente.*
+
+---
 
 **TuWoW RareScan** es el sistema definitivo de detección, exploración e inteligencia de criaturas raras y bestias domesticables para el servidor **TuWoW**, optimizado específicamente para su cliente híbrido con interfaz **ForeverUI**.
 
@@ -70,13 +77,14 @@ Evolucionado a partir del legendario motor de `_NPCScan`, este addon ha sido com
 
 ## 📦 Instalación
 
-1. Descarga o clona este repositorio.
-2. Copia la carpeta `TuWoW_RareScan` en el directorio de addons de tu cliente:
+1. **Descarga**: [TuWoW_RareScan-v2.0.0.zip](https://github.com/zequielbogado-alt/TuWoW_RareScan/releases/download/v2.0.0/TuWoW_RareScan-v2.0.0.zip).
+2. **Extrae**: Descomprime el archivo descargado directamente en tu carpeta de addons:
    ```
-   TuWoW-Client/Interface/AddOns/TuWoW_RareScan
+   TuWoW-Client/Interface/AddOns/
    ```
-3. Inicia el juego o escribe `/reload` si ya estás conectado.
-4. ¡Disfruta de la cacería de rares en Azeroth!
+   *(Asegúrate de que la carpeta se llame exactamente `TuWoW_RareScan` y contenga los archivos directamente).*
+3. **Inicia**: Entra al juego o escribe `/reload` en el chat si ya estás conectado.
+4. ¡Disfruta de la cacería de rares y mascotas exóticas en Azeroth!
 
 ---
 
