@@ -1,0 +1,36 @@
+## Interface: 30300
+## Title: |cff00ccffTuWoW|r |cffffd200RareScan|r
+## Notes: Detector y explorador de criaturas raras para TuWoW (ForeverUI / Azeroth 1-60).
+## Notes-esES: Detector y explorador de criaturas raras para TuWoW (ForeverUI / Azeroth 1-60).
+## Notes-esMX: Detector y explorador de criaturas raras para TuWoW (ForeverUI / Azeroth 1-60).
+## Author: TuWoW Community (Basado en _NPCScan por Saiket)
+## Version: 2.0.0
+## SavedVariables: TuWoW_RareScanOptions, TuWoW_RareScan_DB
+## SavedVariablesPerCharacter: TuWoW_RareScanOptionsCharacter
+## OptionalDeps: Ace3, LibTextTable-1.0, LibSharedMedia-3.0, LibRareSpawns
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+
+Embeds.xml
+Locales.xml
+
+Data\Zones.lua
+TuWoW_RareScan.ClassicData.lua
+Data\CreatureDetails.lua
+Data\HunterPets.lua
+TuWoW_RareScan.lua
+TuWoW_RareScan.Button.lua
+TuWoW_RareScan.Overlays.lua
+TuWoW_RareScan.TamableIDs.lua
+
+UI\Theme.lua
+UI\ModelViewer.lua
+UI\ZoneMapPreview.lua
+UI\MacroDialog.lua
+UI\PageRadar.lua
+UI\PageAlerts.lua
+UI\PageMemory.lua
+UI\PageHelp.lua
+UI\PageHunter.lua
+UI\MainWindow.lua
+TuWoW_RareScan.Minimap.lua

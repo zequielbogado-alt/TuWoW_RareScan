@@ -1,0 +1,7 @@
+<Bindings>
+	<Binding name="CLICK TuWoW_RareScanButton:LeftButton" header="TUWOW_RARESCAN">
+		-- Filler
+	</Binding>
+
+	<ModifiedClick action="_NPCSCAN_BUTTONDRAG" default="CTRL"/>
+</Bindings>
