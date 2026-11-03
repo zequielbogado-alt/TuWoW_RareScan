@@ -126,3 +126,4 @@ A continuación se detallan los fallos técnicos resueltos a lo largo del desarr
 * **Para agregar nuevas mascotas de cazador:** Editar `Data/HunterPets.lua` agregando el ID, coordenadas, dieta y ruta de rugido WAV.
 * **Para agregar opciones:** Vincular el control a `TuWoW_RareScan_DB` o `me.Options` y registrar su guardado.
 * **Verificación de sintaxis:** Ejecutar siempre el script de validación sintáctica (`scratch/check_lua_syntax.py`) antes de cerrar tareas para garantizar 0 errores en runtime.
+
