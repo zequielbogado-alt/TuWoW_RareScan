@@ -45,41 +45,65 @@ me.ModelCameras = {
 
 
 
-local muteTimerFrame = CreateFrame( "Frame" );
-local function UnmuteTemporarily ( duration )
-	local needsRestore = false;
-	if ( not GetCVarBool( "Sound_EnableAllSound" ) ) then
+local audioTimerFrame = CreateFrame( "Frame" );
+local isPlayingAlertAudio = false;
+local originalMasterVol = nil;
+local originalAllSound = nil;
+
+local function PrepareAudioPlayback ( duration )
+	duration = duration or 3.5;
+	local targetVol = 0.7;
+	if ( TuWoW_RareScan_DB and TuWoW_RareScan_DB.alertVolume ~= nil ) then
+		targetVol = tonumber( TuWoW_RareScan_DB.alertVolume ) or 0.7;
+	elseif ( _NPCScan.Options and _NPCScan.Options.AlertVolume ~= nil ) then
+		targetVol = tonumber( _NPCScan.Options.AlertVolume ) or 0.7;
+	end
+
+	if ( not isPlayingAlertAudio ) then
+		originalMasterVol = tonumber( GetCVar( "Sound_MasterVolume" ) or "1" ) or 1;
+		originalAllSound = GetCVar( "Sound_EnableAllSound" );
+		isPlayingAlertAudio = true;
+	end
+
+	-- Desmutear temporalmente si el usuario juega en silencio y tiene activada la opcion
+	local shouldUnmute = (_NPCScan.Options and _NPCScan.Options.AlertSoundUnmute)
+		or (TuWoW_RareScan_DB and TuWoW_RareScan_DB.soundUnmute);
+	if ( not GetCVarBool( "Sound_EnableAllSound" ) and shouldUnmute ) then
 		SetCVar( "Sound_EnableAllSound", 1 );
-		needsRestore = true;
 	end
 	if ( not GetCVarBool( "Sound_EnableSFX" ) ) then
 		SetCVar( "Sound_EnableSFX", 1 );
 	end
-	local mVol = tonumber( GetCVar( "Sound_MasterVolume" ) or "0" ) or 0;
-	if ( mVol < 0.25 ) then
-		SetCVar( "Sound_MasterVolume", "0.8" );
-	end
-	if ( needsRestore ) then
-		muteTimerFrame.elapsed = 0;
-		muteTimerFrame.duration = duration or 4.0;
-		muteTimerFrame:SetScript( "OnUpdate", function ( self, dt )
-			self.elapsed = self.elapsed + dt;
-			if ( self.elapsed >= self.duration ) then
-				self:SetScript( "OnUpdate", nil );
-				if ( _NPCScan.Options and _NPCScan.Options.AlertSoundUnmute ) then
-					SetCVar( "Sound_EnableAllSound", 0 );
-				end
+
+	-- Aplicar el volumen configurado por el usuario en el addon
+	SetCVar( "Sound_MasterVolume", tostring( targetVol ) );
+
+	audioTimerFrame.elapsed = 0;
+	audioTimerFrame.duration = duration;
+	audioTimerFrame:SetScript( "OnUpdate", function ( self, dt )
+		self.elapsed = self.elapsed + dt;
+		if ( self.elapsed >= self.duration ) then
+			self:SetScript( "OnUpdate", nil );
+			isPlayingAlertAudio = false;
+			if ( originalMasterVol ~= nil ) then
+				SetCVar( "Sound_MasterVolume", tostring( originalMasterVol ) );
+				originalMasterVol = nil;
 			end
-		end );
-	end
+			local shouldRestoreMute = (_NPCScan.Options and _NPCScan.Options.AlertSoundUnmute)
+				or (TuWoW_RareScan_DB and TuWoW_RareScan_DB.soundUnmute);
+			if ( originalAllSound == "0" and shouldRestoreMute ) then
+				SetCVar( "Sound_EnableAllSound", 0 );
+			end
+		end
+	end );
 end
+
+me.PrepareAudioPlayback = PrepareAudioPlayback;
 
 --- Plays an alert sound, temporarily enabling sound if necessary.
 -- @param AlertSound  A LibSharedMedia sound key, or file path, or nil to play default.
 function me.PlaySound ( AlertSound )
-	if ( _NPCScan.Options and _NPCScan.Options.AlertSoundUnmute ) then
-		UnmuteTemporarily( 4.0 );
-	end
+	PrepareAudioPlayback( 4.0 );
 	if ( AlertSound == nil ) then -- Default
 		PlaySoundFile( [[Sound\Event Sounds\Event_wardrum_ogre.wav]], "Master" );
 		PlaySoundFile( [[Sound\Events\scourge_horn.wav]], "Master" );

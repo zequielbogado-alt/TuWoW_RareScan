@@ -105,6 +105,15 @@ A continuación se detallan los fallos técnicos resueltos a lo largo del desarr
 * **Problema:** Al dividir un archivo monolítico en submódulos (ej. `PageAlerts.lua`, `PageHelp.lua`), las variables declaradas como `local` en el archivo origen (como `local CURRENT_VERSION = "2.0";`) se vuelven `nil` en los nuevos archivos. Esto causaba un error de concatenación silencioso (`attempt to concatenate global 'CURRENT_VERSION'`), deteniendo la construcción de la página tras crear únicamente el primer icono de cabecera.
 * **Solución:** Compartir siempre las constantes globales a través de la tabla del módulo (`UI.CURRENT_VERSION = "2.0";`), y en cada submódulo realizar fallback seguro: `local CURRENT_VERSION = (UI and UI.CURRENT_VERSION) or "2.0";`. Además, envolver las llamadas de inicialización de páginas en `pcall` que reporten el error al chat en caso de fallo en lugar de silenciarlo.
 
+### I. Control Dinámico de Volumen de Alertas en WoW 3.3.5a
+* **Limitación de la API 3.3.5a:** La función `PlaySoundFile(filePath, "Master")` carece de un parámetro individual para regular el volumen de un archivo específico; se reproduce directamente escalado según la CVar global `Sound_MasterVolume`.
+* **Solución implementada (`PrepareAudioPlayback`):**
+  1. Al detonar cualquier sonido (aviso de rare, botón de prueba en la UI o rugido de mascota de cazador), se guarda el `Sound_MasterVolume` original del usuario (y el estado de `Sound_EnableAllSound` si estaba silenciado).
+  2. Se aplica temporalmente el volumen elegido por el usuario en el addon (`TuWoW_RareScan_DB.alertVolume`, valor por defecto 70%).
+  3. Tras una ventana de 3.5 a 4.0 segundos, un frame temporizador restaura automáticamente el volumen maestro del juego a su valor previo sin alterar la configuración del jugador ni persistir cambios indeseados en `Config.wtf`.
+  4. Si el jugador juega con sonido apagado pero activó el desmuteo temporal de emergencia, el canal de audio se cierra nuevamente al finalizar el aviso.
+* **Componente Slider ForeverUI:** Se añadió el método `Theme:CreateSlider` con base en `OptionsSliderTemplate`, estilizado con textos dorados, porcentajes y botones de acceso rápido `[ 25% ] [ 50% ] [ 75% ] [ 100% ]` que proveen retroalimentación auditiva inmediata al hacer clic.
+
 ---
 
 ## 📋 3. Resumen de Módulos Funcionales

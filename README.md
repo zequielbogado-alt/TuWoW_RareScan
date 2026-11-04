@@ -41,6 +41,7 @@ Evolucionado a partir del legendario motor de `_NPCScan`, este addon ha sido com
 * **Separación Visual 2D vs 3D**:
   * *Avistamiento real en vivo o prueba de personaje*: Muestra **únicamente el modelo 3D** en movimiento.
   * *Pruebas manuales desde el explorador*: Muestra el **retrato 2D nítido sobre el pedestal correspondiente**, garantizando cero colisiones visuales.
+* **Control de Volumen de Alertas y Rugidos**: Nuevo regulador deslizante con ajuste continuo y botones rápidos (`[ 25% ]`, `[ 50% ]`, `[ 75% ]`, `[ 100% ]`) para adaptar la potencia del audio a tu preferencia sin alterar el volumen general del juego.
 * **Avisos Multisensoriales**: Sonido configurable (cuernos de guerra, tambores ogros, campana de subasta, subida de nivel), destello perimetral rojo en los bordes de la pantalla y asignación automática de iconos de banda (marcador de calavera, triángulo verde, cruz, etc.).
 
 ### 4. Diagnóstico Amigable de la Memoria WDB

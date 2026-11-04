@@ -28,6 +28,7 @@ me.OptionsDefault = {
 	AchievementsAddFound = nil;
 	AlertSoundUnmute = nil;
 	AlertSound = nil; -- Default sound
+	AlertVolume = 0.7; -- Volumen de alerta (0.1 a 1.0)
 	MinimapPos = 215; -- Posición angular en el anillo del minimapa
 	MinimapHide = nil;
 	ScreenFlash = true;
@@ -716,6 +717,7 @@ function me.Frame:PLAYER_LOGIN ( Event )
 	if ( TuWoW_RareScan_DB.screenFlash == nil ) then TuWoW_RareScan_DB.screenFlash = true; end
 	if ( TuWoW_RareScan_DB.filterByLevel == nil ) then TuWoW_RareScan_DB.filterByLevel = false; end
 	if ( TuWoW_RareScan_DB.alertAlreadyFound == nil ) then TuWoW_RareScan_DB.alertAlreadyFound = false; end
+	if ( TuWoW_RareScan_DB.alertVolume == nil ) then TuWoW_RareScan_DB.alertVolume = 0.7; end
 end
 
 function me:IsCached ( NpcID )

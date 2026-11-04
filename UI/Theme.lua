@@ -153,3 +153,44 @@ function Theme:CreateCheckbox(parent, text, initialValue, onClick, tooltipTitle,
 	return cb;
 end
 
+function Theme:CreateSlider(parent, text, minVal, maxVal, step, initialVal, onValueChanged, width)
+	Theme.sliderCounter = (Theme.sliderCounter or 0) + 1;
+	local name = "TuWoW_RareScan_Slider_" .. Theme.sliderCounter;
+	local slider = CreateFrame("Slider", name, parent, "OptionsSliderTemplate");
+	slider:SetWidth(width or 220);
+	slider:SetHeight(16);
+	slider:SetMinMaxValues(minVal or 0, maxVal or 100);
+	slider:SetValueStep(step or 5);
+	slider:SetValue(initialVal or minVal or 0);
+	
+	local title = _G[name .. "Text"];
+	if title then
+		title:SetFontObject("GameFontNormalSmall");
+		title:SetTextColor(unpack(self.colors.gold));
+		title:SetText(text or "");
+	end
+	
+	local low = _G[name .. "Low"];
+	if low then
+		low:SetFontObject("GameFontHighlightSmall");
+		low:SetTextColor(unpack(self.colors.muted));
+		low:SetText((minVal or 0) .. "%");
+	end
+	
+	local high = _G[name .. "High"];
+	if high then
+		high:SetFontObject("GameFontHighlightSmall");
+		high:SetTextColor(unpack(self.colors.muted));
+		high:SetText((maxVal or 100) .. "%");
+	end
+	
+	slider:SetScript("OnValueChanged", function(self, value)
+		local rounded = math.floor((value / (step or 1)) + 0.5) * (step or 1);
+		if onValueChanged then
+			onValueChanged(rounded);
+		end
+	end);
+	
+	return slider;
+end
+

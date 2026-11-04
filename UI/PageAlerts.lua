@@ -185,19 +185,12 @@ function UI:CreatePageAlerts()
 		colRight,
 		"Efecto de Sonido de la Alarma",
 		"Interface\\Icons\\INV_Misc_Horn_02",
-		164,
+		134,
 		"Tono de Alerta",
 		"Elige la llamada sonora que reproducira el addon al detectar un rare."
 	);
 	cardSoundTone:SetPoint("TOPLEFT", colRight, "TOPLEFT", 0, 0);
 	cardSoundTone:SetPoint("TOPRIGHT", colRight, "TOPRIGHT", 0, 0);
-	
-	local soundCurrent = cardSoundTone:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall");
-	soundCurrent:SetPoint("TOPLEFT", cardSoundTone.icon, "BOTTOMLEFT", 0, -6);
-	soundCurrent:SetPoint("TOPRIGHT", cardSoundTone, "TOPRIGHT", -10, -32);
-	soundCurrent:SetJustifyH("LEFT");
-	soundCurrent:SetText("Sonido actual: |cffffd200Tambores de Guerra y Cuerno|r");
-	page.soundCurrent = soundCurrent;
 	
 	local sounds = {
 		{ name = "Tambores", file = "Sound\\Spells\\PVPFlagCaptured.wav" },
@@ -205,6 +198,22 @@ function UI:CreatePageAlerts()
 		{ name = "Campana", file = "Sound\\Doodad\\BellTollAlliance.wav" },
 		{ name = "Subida Nivel", file = "Sound\\Interface\\LevelUp.wav" },
 	};
+	
+	local curFile = (TuWoW_RareScan_DB and TuWoW_RareScan_DB.soundFile) or (NRS.Options and NRS.Options.AlertSound);
+	local currentSoundName = "Tambores";
+	for _, s in ipairs(sounds) do
+		if s.file == curFile then
+			currentSoundName = s.name;
+			break;
+		end
+	end
+	
+	local soundCurrent = cardSoundTone:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall");
+	soundCurrent:SetPoint("TOPLEFT", cardSoundTone.icon, "BOTTOMLEFT", 0, -6);
+	soundCurrent:SetPoint("TOPRIGHT", cardSoundTone, "TOPRIGHT", -10, -32);
+	soundCurrent:SetJustifyH("LEFT");
+	soundCurrent:SetText("Sonido actual: |cffffd200" .. currentSoundName .. "|r");
+	page.soundCurrent = soundCurrent;
 	
 	for i, s in ipairs(sounds) do
 		local btn = Theme:CreateButton(cardSoundTone, s.name, 96, 24, function()
@@ -214,26 +223,82 @@ function UI:CreatePageAlerts()
 		end);
 		local col = (i - 1) % 2;
 		local row = math.floor((i - 1) / 2);
-		btn:SetPoint("TOPLEFT", cardSoundTone, "TOPLEFT", 10 + col * 102, -64 - row * 28);
+		btn:SetPoint("TOPLEFT", cardSoundTone, "TOPLEFT", 10 + col * 102, -60 - row * 28);
 	end
 	
-	local btnTestSound = Theme:CreateButton(cardSoundTone, "Escuchar Prueba", 140, 24, function()
+	local btnTestSound = Theme:CreateButton(cardSoundTone, "Escuchar Tono", 130, 24, function()
 		NRS:PlayAlertSound();
 	end);
 	btnTestSound:SetPoint("BOTTOMRIGHT", cardSoundTone, "BOTTOMRIGHT", -10, 10);
 	btnTestSound.text:SetTextColor(unpack(Theme.colors.gold));
 	
-	-- 6. Marcador de Objetivo
+	-- 6. Volumen del Sonido de Alerta
+	local cardVolume = CreateOptionCard(
+		colRight,
+		"Volumen de la Alarma y Rugidos",
+		"Interface\\Icons\\INV_Misc_Horn_03",
+		106,
+		"Intensidad Sonora",
+		"Regula la intensidad de volumen con la que se reproducen las alarmas del radar y rugidos de mascotas."
+	);
+	cardVolume:SetPoint("TOPLEFT", cardSoundTone, "BOTTOMLEFT", 0, -8);
+	cardVolume:SetPoint("TOPRIGHT", cardSoundTone, "BOTTOMRIGHT", 0, -8);
+	cardVolume.body:SetText("Ajusta el volumen temporal durante las alarmas y rugidos sin alterar tu sonido general:");
+	
+	local initialVol = 0.7;
+	if TuWoW_RareScan_DB and TuWoW_RareScan_DB.alertVolume ~= nil then
+		initialVol = tonumber(TuWoW_RareScan_DB.alertVolume) or 0.7;
+	elseif NRS.Options and NRS.Options.AlertVolume ~= nil then
+		initialVol = tonumber(NRS.Options.AlertVolume) or 0.7;
+	end
+	local initialPct = math.floor(initialVol * 100 + 0.5);
+	
+	local volDisplay = cardVolume:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall");
+	volDisplay:SetPoint("TOPRIGHT", cardVolume, "TOPRIGHT", -12, -10);
+	volDisplay:SetText("Nivel: |cffffd200" .. initialPct .. "%|r");
+	page.volDisplay = volDisplay;
+	
+	local sliderVol = Theme:CreateSlider(cardVolume, "Intensidad", 10, 100, 5, initialPct, function(val)
+		local frac = val / 100;
+		if TuWoW_RareScan_DB then TuWoW_RareScan_DB.alertVolume = frac; end
+		if NRS.Options then NRS.Options.AlertVolume = frac; end
+		volDisplay:SetText("Nivel: |cffffd200" .. val .. "%|r");
+	end, 185);
+	sliderVol:SetPoint("BOTTOMLEFT", cardVolume, "BOTTOMLEFT", 14, 20);
+	page.sliderVol = sliderVol;
+	
+	pcall(function()
+		sliderVol:HookScript("OnMouseUp", function()
+			NRS:PlayAlertSound();
+		end);
+	end);
+	
+	-- Botones de niveles rapidos
+	local presetLabel = cardVolume:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
+	presetLabel:SetPoint("BOTTOMLEFT", sliderVol, "TOPRIGHT", 20, 2);
+	presetLabel:SetTextColor(unpack(Theme.colors.muted));
+	presetLabel:SetText("Ajuste rapido:");
+	
+	local presets = { 25, 50, 75, 100 };
+	for i, pct in ipairs(presets) do
+		local pBtn = Theme:CreateButton(cardVolume, pct .. "%", 42, 22, function()
+			sliderVol:SetValue(pct);
+			NRS:PlayAlertSound();
+		end);
+		pBtn:SetPoint("LEFT", sliderVol, "RIGHT", 20 + (i - 1) * 46, 2);
+	end
+	
+	-- 7. Marcador de Objetivo
 	local cardMarker = CreateOptionCard(
 		colRight,
 		"Marcador de Objetivo Automatico",
 		"Interface\\Icons\\Ability_Hunter_MasterMarksman",
-		118,
+		108,
 		"Raid Target Icon",
 		"Coloca un icono sobre la criatura para localizarla rapidamente en el terreno."
 	);
-	cardMarker:SetPoint("TOPLEFT", cardSoundTone, "BOTTOMLEFT", 0, -8);
-	cardMarker:SetPoint("TOPRIGHT", cardSoundTone, "BOTTOMRIGHT", 0, -8);
+	cardMarker:SetPoint("TOPLEFT", cardVolume, "BOTTOMLEFT", 0, -8);
+	cardMarker:SetPoint("TOPRIGHT", cardVolume, "BOTTOMRIGHT", 0, -8);
 	cardMarker.body:SetText("Aplica de forma automatica un marcador visual sobre la cabeza del rare en cuanto lo seleccionas:");
 	
 	local markers = {
@@ -253,12 +318,12 @@ function UI:CreatePageAlerts()
 		btn:SetPoint("BOTTOMLEFT", cardMarker, "BOTTOMLEFT", 10 + (i - 1) * 80, 10);
 	end
 	
-	-- 7. Centro de Pruebas y Simulacion
+	-- 8. Centro de Pruebas y Simulacion
 	local cardSim = CreateOptionCard(
 		colRight,
 		"Centro de Pruebas y Simulacion",
 		"Interface\\Icons\\Ability_Warrior_WarCry",
-		108,
+		98,
 		"Simulador Integral",
 		"Prueba el aviso completo con sonido, destello y ventana 3D interactiva."
 	);
@@ -266,7 +331,7 @@ function UI:CreatePageAlerts()
 	cardSim:SetPoint("TOPRIGHT", cardMarker, "BOTTOMRIGHT", 0, -8);
 	cardSim.body:SetText("Dispara una alerta simulada con un rare de prueba para verificar el volumen del audio, el destello y el boton de tarjeteo 3D:");
 	
-	local btnSim = Theme:CreateButton(cardSim, "Simular Alerta de Prueba Completa", 280, 28, function()
+	local btnSim = Theme:CreateButton(cardSim, "Simular Alerta de Prueba Completa", 280, 26, function()
 		NRS:TestAlert(448);
 	end);
 	btnSim:SetPoint("BOTTOMLEFT", cardSim, "BOTTOMLEFT", 10, 10);

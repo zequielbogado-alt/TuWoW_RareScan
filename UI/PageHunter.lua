@@ -369,7 +369,9 @@ function UI:CreatePageHunter()
 	local btnRoar = Theme:CreateButton(centerCol, "Escuchar Rugido", 145, 26, function()
 		local pet = UI.selectedHunterPet;
 		if pet and pet.soundFile then
-			if GetCVar("Sound_EnableAllSound") == "0" then
+			if NRS.Button and NRS.Button.PrepareAudioPlayback then
+				NRS.Button.PrepareAudioPlayback(3.0);
+			elseif GetCVar("Sound_EnableAllSound") == "0" then
 				SetCVar("Sound_EnableAllSound", 1);
 			end
 			local ok = pcall(PlaySoundFile, pet.soundFile, "Master");
