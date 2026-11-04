@@ -7,6 +7,7 @@ local ADDON_NAME, NRS = ...;
 local UI = NRS.UI or {};
 NRS.UI = UI;
 local Theme = NRS.Theme;
+local CURRENT_VERSION = (UI and UI.CURRENT_VERSION) or "2.0";
 
 function UI:CreatePageAlerts()
 	local parent = self.content;

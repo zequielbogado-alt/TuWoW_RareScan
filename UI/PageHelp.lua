@@ -7,6 +7,7 @@ local ADDON_NAME, NRS = ...;
 local UI = NRS.UI or {};
 NRS.UI = UI;
 local Theme = NRS.Theme;
+local CURRENT_VERSION = (UI and UI.CURRENT_VERSION) or "2.0";
 
 function UI:CreatePageHelp()
 	local parent = self.content;
@@ -229,12 +230,3 @@ function UI:CreatePageHelp()
 	end);
 	btnFavs:SetPoint("BOTTOMLEFT", cardCatalog, "BOTTOMLEFT", 10, 8);
 end
-
---------------------------------------------------------------------------------
--- PAGINA 5: SANTUARIO DE MASCOTAS EXOTICAS (Exclusivo para la Clase Cazador)
---------------------------------------------------------------------------------
-UI.hunterFilterCategory = "all";
-UI.hunterSearchQuery = "";
-UI.NUM_HUNTER_CARDS_VISIBLE = 8;
-UI.HUNTER_CARD_ROW_H = 50;
-

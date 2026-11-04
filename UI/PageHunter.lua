@@ -8,6 +8,11 @@ local UI = NRS.UI or {};
 NRS.UI = UI;
 local Theme = NRS.Theme;
 
+UI.hunterFilterCategory = "all";
+UI.hunterSearchQuery = "";
+UI.NUM_HUNTER_CARDS_VISIBLE = 8;
+UI.HUNTER_CARD_ROW_H = 50;
+
 function UI:CreatePageHunter()
 	local parent = self.content;
 	local page = CreateFrame("Frame", nil, parent);

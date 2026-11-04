@@ -5,6 +5,7 @@
 
 local ADDON_NAME, NRS = ...;
 NRS.UI = NRS.UI or {};
+NRS.UI.CURRENT_VERSION = "2.0";
 NRS.Theme = NRS.Theme or {};
 
 local Theme = NRS.Theme;

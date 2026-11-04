@@ -9,7 +9,8 @@ local UI = NRS.UI or {};
 NRS.UI = UI;
 local Theme = NRS.Theme;
 
-local CURRENT_VERSION = "2.0";
+UI.CURRENT_VERSION = "2.0";
+local CURRENT_VERSION = UI.CURRENT_VERSION;
 
 -- Constantes para Virtual Scrolling fluido (60 FPS)
 UI.NUM_CARDS_VISIBLE = 9;
@@ -179,12 +180,22 @@ function UI:Create()
 	f:SetScript("OnShow", function() UI:OnShow(); end);
 	
 	-- Construir las paginas protegidas contra fallos individuales
-	pcall(function() self:CreatePageRadar(); end);
-	pcall(function() self:CreatePageAlerts(); end);
-	pcall(function() self:CreatePageMemory(); end);
-	pcall(function() self:CreatePageHelp(); end);
+	local ok, err;
+	ok, err = pcall(function() self:CreatePageRadar(); end);
+	if not ok and NRS and NRS.Print then NRS:Print("|cffff3333Error en Radar:|r " .. tostring(err)); end
+	
+	ok, err = pcall(function() self:CreatePageAlerts(); end);
+	if not ok and NRS and NRS.Print then NRS:Print("|cffff3333Error en Alertas:|r " .. tostring(err)); end
+	
+	ok, err = pcall(function() self:CreatePageMemory(); end);
+	if not ok and NRS and NRS.Print then NRS:Print("|cffff3333Error en Memoria:|r " .. tostring(err)); end
+	
+	ok, err = pcall(function() self:CreatePageHelp(); end);
+	if not ok and NRS and NRS.Print then NRS:Print("|cffff3333Error en Guia:|r " .. tostring(err)); end
+	
 	if playerClass == "HUNTER" then
-		pcall(function() self:CreatePageHunter(); end);
+		ok, err = pcall(function() self:CreatePageHunter(); end);
+		if not ok and NRS and NRS.Print then NRS:Print("|cffff3333Error en Mascotas Exoticas:|r " .. tostring(err)); end
 	end
 	
 	f:Hide();
