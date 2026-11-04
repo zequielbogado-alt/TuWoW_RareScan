@@ -101,6 +101,10 @@ A continuación se detallan los fallos técnicos resueltos a lo largo del desarr
 * Los clientes WoW 3.3.5a carecen de soporte para emojis UTF-8 modernos (renderizan el caracter `?` o un recuadro blanco).
 * Todas las interfaces usan iconos oficiales de Blizzard (`Interface\\Icons\\...`), marcadores de banda nativos de WoW (`Interface\\TargetingFrame\\UI-RaidTargetingIcons`) y colores hexadecimales estándar (`|cffffd200...|r`).
 
+### H. Modularización y Ámbito de Variables Locales (File Scope)
+* **Problema:** Al dividir un archivo monolítico en submódulos (ej. `PageAlerts.lua`, `PageHelp.lua`), las variables declaradas como `local` en el archivo origen (como `local CURRENT_VERSION = "2.0";`) se vuelven `nil` en los nuevos archivos. Esto causaba un error de concatenación silencioso (`attempt to concatenate global 'CURRENT_VERSION'`), deteniendo la construcción de la página tras crear únicamente el primer icono de cabecera.
+* **Solución:** Compartir siempre las constantes globales a través de la tabla del módulo (`UI.CURRENT_VERSION = "2.0";`), y en cada submódulo realizar fallback seguro: `local CURRENT_VERSION = (UI and UI.CURRENT_VERSION) or "2.0";`. Además, envolver las llamadas de inicialización de páginas en `pcall` que reporten el error al chat en caso de fallo en lugar de silenciarlo.
+
 ---
 
 ## 📋 3. Resumen de Módulos Funcionales
