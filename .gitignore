@@ -1,5 +1,7 @@
 *.bak
 *.tmp
+*.zip
+sync_production.py
 Thumbs.db
 Desktop.ini
 .DS_Store
