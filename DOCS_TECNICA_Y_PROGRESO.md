@@ -114,6 +114,15 @@ A continuación se detallan los fallos técnicos resueltos a lo largo del desarr
   4. Si el jugador juega con sonido apagado pero activó el desmuteo temporal de emergencia, el canal de audio se cierra nuevamente al finalizar el aviso.
 * **Componente Slider ForeverUI:** Se añadió el método `Theme:CreateSlider` con base en `OptionsSliderTemplate`, estilizado con textos dorados, porcentajes y botones de acceso rápido `[ 25% ] [ 50% ] [ 75% ] [ 100% ]` que proveen retroalimentación auditiva inmediata al hacer clic.
 
+### J. Rama de Producción para Publicación Web en TuWoW
+* **Requisitos del portal:** La plataforma web de la comunidad TuWoW importa repositorios de addons directamente desde GitHub, exigiendo compatibilidad con WoW 3.3.5a y un bundle limpio.
+* **Ramas creadas:** `production` y `produccion` (alias idéntico).
+* **Contenido de la rama de producción:**
+  - Contiene el árbol de archivos funcionales completo a nivel raíz (archivo `.toc`, scripts Lua, XMLs, `Assets/`, `Data/`, `Libs/`, `Locales/`, `UI/`).
+  - Incluye `LEEME.md` (y `README.md`) para que el portal y GitHub muestren la ficha descriptiva oficial.
+  - Excluye notas de desarrollo internas (`DOCS_TECNICA_Y_PROGRESO.md` y `PLAN_DE_ADAPTACION.md`).
+* **Script de automatización:** Ejecutar `python sync_production.py` en la raíz actualiza y sincroniza automáticamente las ramas `production` y `produccion` en GitHub cada vez que se lance una nueva versión en `main`.
+
 ---
 
 ## 📋 3. Resumen de Módulos Funcionales
